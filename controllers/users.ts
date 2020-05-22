@@ -113,7 +113,14 @@ const updateUser = async (
 // @desc Delete User
 // @route DELETE api/v1/users/:id
 
-const deleteUser = ({ response }: { response: any }) => {
+const deleteUser = (
+  { params, response }: { params: { id: string }; response: any },
+) => {
+  users = users.filter((user) => user.id !== params.id);
+  response.body = {
+    success: true,
+    msg: `User ${params.id} removed`,
+  };
 };
 
 export { getUsers, getUser, addUser, updateUser, deleteUser };
