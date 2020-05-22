@@ -5,7 +5,7 @@ import {
   updateUser,
   addUser,
   deleteUser,
-} from "./controllers/users.ts";
+} from "../controllers/users.ts";
 const router = new Router();
 
 router.get("/api/v1/users", getUsers)
