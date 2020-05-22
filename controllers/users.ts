@@ -32,15 +32,13 @@ const getUsers = ({ response }: { response: any }) => {
 const getUser = (
   { params, response }: { params: { id: string }; response: any },
 ) => {
-  const product: User | undefined = users.find((user) =>
-    params.id === params.id
-  );
+  const user: User | undefined = users.find((user) => params.id === params.id);
 
-  if (product) {
+  if (user) {
     response.status = 200;
     response.body = {
       success: true,
-      data: product,
+      data: user,
     };
   } else {
     response.status = 404;
@@ -60,7 +58,7 @@ const addUser = async (
   const body = await request.body();
 
   if (!request.hasBody) {
-    response.status = 404;
+    response.status = 400;
     response.body = {
       success: false,
       msg: "Could not add",
@@ -80,7 +78,36 @@ const addUser = async (
 // @desc Update user
 // @route PUT api/v1/users/:id
 
-const updateUser = ({ response }: { response: any }) => {
+const updateUser = async (
+  { params, request, response }: {
+    params: { id: string };
+    request: any;
+    response: any;
+  },
+) => {
+  const user: User | undefined = users.find((user) => params.id === params.id);
+
+  if (user) {
+    const body = await request.body();
+
+    const updateData: { name?: string } = body.value;
+
+    users = users.map((user) =>
+      user.id === params.id ? { ...user, ...updateData } : user
+    );
+
+    response.status = 200;
+    response.body = {
+      success: true,
+      data: users,
+    };
+  } else {
+    response.status = 404;
+    response.body = {
+      success: false,
+      msg: `No user with id: ${params.id} found`,
+    };
+  }
 };
 
 // @desc Delete User
